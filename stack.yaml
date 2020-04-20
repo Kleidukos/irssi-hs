@@ -1,0 +1,8 @@
+resolver: lts-15.8
+
+extra-deps:
+- base-noprelude-4.13.0.0
+
+nix:
+  enable: true
+  packages: [glpk, pcre, zlib]
