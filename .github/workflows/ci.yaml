@@ -1,0 +1,22 @@
+jobs:
+  build:
+    "runs-on": "ubuntu-18.04"
+    steps:
+    - uses: "actions/checkout@v2"
+    - uses: "actions/setup-haskell@v1"
+      with:
+        "cabal-version": "${{ matrix.cabal }}"
+        "ghc-version": "${{ matrix.ghc }}"
+    - uses: "cachix/install-nix-action@v8"
+    - name: Run stack tests
+      run: "stack test --fast"
+    strategy:
+      matrix:
+        cabal:
+        - '3.0'
+        ghc:
+        - '8.8.3'
+        - '8.6.5'
+name: Haskell CI
+on:
+- push

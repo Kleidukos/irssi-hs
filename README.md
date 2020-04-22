@@ -1,14 +1,19 @@
-# irssi-hs
+# irssi-hs [![Simple Haskell][simple haskell]](https://www.simplehaskell.org) ![Haskell CI][ci]
 
 This library allows you to speak to irssi through the `Irssi-Instance` irssi plugin.  
 
 ## Usage
 
-First, initialie the state of your irssi instance with `initState :: Either Text IrssiState`
+First, initialise the state of your irssi instance with `initState :: Either Text IrssiState`
 
 ```haskell
 import Irssi
 
-Right irssiState <- initState
+main :: IO ()
+main = do
+  Right irssiState <- initState
 ```
-The library will then query your irssi for its capabilities (methods, chatnets, etc)
+
+[simple haskell]: https://www.simplehaskell.org/badges/badge.svg
+[hackage]: https://img.shields.io/hackage/v/irssi-hs.svg
+[ci]: https://github.com/kleidukos/irssi-hs/workflows/Haskell%20CI/badge.svg
