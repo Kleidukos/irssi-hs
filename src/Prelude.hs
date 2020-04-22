@@ -1,5 +1,5 @@
-module Prelude
-  (module Relude
+module Prelude (
+  module Relude
   ) where
 
 import           Relude

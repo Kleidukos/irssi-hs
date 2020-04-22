@@ -31,6 +31,7 @@ default-extensions:
   - DeriveLift
   - DeriveTraversable
   - DerivingStrategies
+  - DuplicateRecordFields
   - EmptyCase
   - ExistentialQuantification
   - FlexibleContexts
@@ -76,6 +77,7 @@ library:
   - base-noprelude
   - bytestring
   - containers
+  - directory
   - network
   - relude
   - text
@@ -88,8 +90,11 @@ tests:
     main: Main.hs
     dependencies:
     - aeson
-    - base
+    - base-noprelude
     - irssi-hs
     - relude
     - tasty
     - tasty-hspec
+    - vector
+    - unordered-containers
+    - text
