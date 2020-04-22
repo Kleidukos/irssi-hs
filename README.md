@@ -2,9 +2,11 @@
 
 This library allows you to speak to irssi through the `Irssi-Instance` irssi plugin.  
 
+:warning: This is a work in progress
+
 ## Usage
 
-First, initialise the state of your irssi instance with `initState :: Either Text IrssiState`
+Initialise the state of your irssi instance with `initState :: Either Text IrssiState`
 
 ```haskell
 import Irssi
