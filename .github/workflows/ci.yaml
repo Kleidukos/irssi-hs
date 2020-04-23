@@ -7,9 +7,12 @@ jobs:
       with:
         "cabal-version": "${{ matrix.cabal }}"
         "ghc-version": "${{ matrix.ghc }}"
-    - uses: "cachix/install-nix-action@v8"
-    - name: Run stack tests
-      run: "stack test --fast"
+    - name: Install dependencies
+      run: |
+        cabal update
+        cabal build --enable-tests --enable-benchmarks --only-dependencies
+    - name: Run cabal tests
+      run: cabal test
     strategy:
       matrix:
         cabal:
@@ -17,6 +20,8 @@ jobs:
         ghc:
         - '8.8.3'
         - '8.6.5'
+        - '8.4.4'
+        - '8.2.2'
 name: Haskell CI
 on:
 - push

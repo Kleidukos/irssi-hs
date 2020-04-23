@@ -151,10 +151,10 @@ let cabalDeps =
             ''
         }
 
-let stackTest =
+let cabalTest =
       BuildStep.Name
-        { name = "Run stack tests"
-        , run = "stack test --fast"
+        { name = "Run cabal tests"
+        , run = "cabal test"
         }
 
 let generalCi =
@@ -173,7 +173,7 @@ let ciNoMatrix = λ(sts : List BuildStep) → generalCi sts (None DhallMatrix.Ty
 
 let stepsEnv =
         λ(v : VersionInfo)
-      →   [ checkout, haskellEnv v, nixInstall ,stackTest ]
+      →   [ checkout, haskellEnv v, cabalDeps, cabalTest ]
         : List BuildStep
 
 let matrixSteps = stepsEnv matrixEnv : List BuildStep
@@ -200,7 +200,8 @@ in  { VersionInfo = VersionInfo
     , OS = OS
     , PyInfo = PyInfo
     , Event = Event
-    , stackTest = stackTest
+    , cabalTest = cabalTest
+    , cabalDeps = cabalDeps
     , checkout = checkout
     , haskellEnv = haskellEnv
     , defaultEnv = defaultEnv
