@@ -6,14 +6,16 @@ This library allows you to speak to irssi through the `Irssi-Instance` irssi plu
 
 ## Usage
 
-Initialise the state of your irssi instance with `initState :: Either Text IrssiState`
+Start the worker that will speak to the socket
 
 ```haskell
 import Irssi
 
 main :: IO ()
 main = do
-  Right irssiState <- initState
+  let command = Msg Message{cmd="msg", network="freenode", channel="#bottest", message="I am alive!"}
+  stargate <- startWorker
+  sendMessage command stargate
 ```
 
 [simple haskell]: https://www.simplehaskell.org/badges/badge.svg

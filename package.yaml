@@ -7,9 +7,13 @@ github: "kleidukos/irssi-hs"
 license: MIT
 author: "Hécate"
 maintainer: "Hécate"
-# synopsis: A new Haskeleton package.
-# description: irssi-hs is a new Haskeleton package.
-# category: Other
+synopsis: A Haskell library to communicate with a running irssi
+description: Please see README.md https://github.com/Kleidukos/irssi-hs/blob/master/README.md
+category: Network
+license-file: LICENSE.md
+tested-with: GHC==8.2.2, GHC==8.4.4, GHC==8.6.5, GHC==8.8.3
+verbatim:
+  cabal-version: 2.2
 
 extra-source-files:
 - CHANGELOG.md
@@ -57,31 +61,60 @@ default-extensions:
   - TypeFamilyDependencies
   - TypeOperators
 
-ghc-options:
-  - -Wall
-  - -threaded
-  - -rtsopts
-  - -with-rtsopts=-N
-  - -Wincomplete-uni-patterns
-  - -Wincomplete-record-updates
-  - -Wcompat
-  - -Widentities
-  - -Wredundant-constraints
-  - -fhide-source-paths
-  - -Wmissing-export-lists
-  - -Wpartial-fields
+when:
+  - condition: "impl(ghc >= 8.4.4)"
+    then:
+      ghc-options:
+        - -Wall
+        - -Wcompat
+        - -Werror
+        - -Widentities
+        - -Wincomplete-record-updates
+        - -Wincomplete-uni-patterns
+        - -Wmissing-export-lists
+        - -Wpartial-fields
+        - -Wredundant-constraints
+        - -fhide-source-paths
+        - -Wno-unused-do-bind
+    else:
+      ghc-options:
+        - -Wall
+        - -Wcompat
+        - -Werror
+        - -Widentities
+        - -Wincomplete-record-updates
+        - -Wincomplete-uni-patterns
+        - -Wredundant-constraints
+        - -fhide-source-paths
+        - -Wno-unused-do-bind
+
+
 
 library:
+  exposed-modules:
+    - Irssi
+    - Irssi.Worker
+    - Irssi.Types
+
   dependencies:
-  - aeson
-  - base-noprelude
-  - bytestring
-  - containers
-  - directory
-  - network
-  - relude
-  - text
-  - vector
+  - aeson          >= 1.4.7 && < 1.5
+  - bytestring     >= 0.10.8 && < 0.11
+  - containers     >= 0.6.0 && < 0.7
+  - text           >= 1.2.3 && < 1.3
+  - vector         >= 0.12.1 && < 0.13
+  - name: base
+    version: ">= 4.10 && < 4.14"
+    mixin:
+      - hiding (Prelude)
+  - directory      >= 1.3.3 && < 1.4
+  - network        >= 3.1.1 && < 3.2
+  - name: relude
+    version: ">= 0.6.0 && < 0.7"
+    mixin:
+      - (Relude as Prelude)
+
+  - unagi-chan     >= 0.4.1 && < 0.5
+  - unordered-containers >= 0.2.10 && < 0.3
   source-dirs: src
 
 tests:
@@ -90,9 +123,16 @@ tests:
     main: Main.hs
     dependencies:
     - aeson
-    - base-noprelude
+    - name: base
+      version: ">= 4.10 && < 4.14"
+      mixin:
+        - hiding (Prelude)
+    - bytestring
     - irssi-hs
-    - relude
+    - name: relude
+      version: ">= 0.6.0 && < 0.7"
+      mixin:
+        - (Relude as Prelude)
     - tasty
     - tasty-hspec
     - vector

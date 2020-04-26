@@ -6,3 +6,6 @@ extra-deps:
 nix:
   enable: true
   packages: [glpk, pcre, zlib]
+
+ghc-options:
+  "$locals": -fwrite-ide-info
