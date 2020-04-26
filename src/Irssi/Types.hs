@@ -8,7 +8,8 @@ Maintainer  : hecate@glitchbra.in
 
 module Irssi.Types
   ( -- * Types
-    ChatType (..) -- exported for tests
+    APIError (..)
+  , ChatType (..) -- exported for tests
   , Chatnet (..)
   , ChatnetResponse (..)
   , Command (..)
@@ -25,6 +26,11 @@ import qualified Data.Text                     as T
 import           Data.Vector                   (Vector)
 import qualified Data.Vector                   as V
 import qualified Text.Show
+
+-- | This datatype encapsulates the potential JSON parsing error we may
+-- encounter when getting data from the socket server
+data APIError = JSONParsingError Text
+  deriving (Show, Eq)
 
 -- | The newtype holding the communication channels to the worker
 newtype Stargate = Stargate {getChans :: (InChan Command, OutChan ByteString)}
@@ -43,7 +49,8 @@ data IrssiState =
              } deriving (Show, Eq)
 
 -- | Intermediate type to aid with JSON decoding
-newtype ChatnetResponse = CR { chatnetsList :: Vector Chatnet } deriving (Eq, Show)
+newtype ChatnetResponse = CR { chatnetsList :: Vector Chatnet }
+  deriving (Eq, Show)
 
 -- | Metadatas associated with a chatnet
 data Chatnet =
@@ -137,9 +144,8 @@ parseObject = withObject "innerbis" $ \o -> do
 
 
 -- | The protocol that is associated with the chatnet or server
-data ChatType = IRC
-              | SILC
-              deriving (FromJSON, Show, Generic, Eq)
+data ChatType = IRC | SILC
+  deriving (FromJSON, Show, Generic, Eq)
 
 -- | A type holding all the necessary information to send a message to someone on IRC
 data Message = Message { cmd     :: Text
@@ -149,10 +155,11 @@ data Message = Message { cmd     :: Text
                        } deriving (Show, Eq)
 
 -- | The sum type of the exposed API
-data Command = Msg Message
-             | Methods
-             | Chatnets
-             | Version
+data Command = Msg Message -- ^ Send a message to someone on IRC
+             | Methods     -- ^ Get back a list of supported methods
+             | Chatnets    -- ^ Get back a list of configured chatnets
+             | Version     -- ^ Get back irssi's version
+             | Print Text  -- ^ Print a message as a notification in the status window
              deriving (Show, Eq)
 
 instance ToJSON Message where
@@ -166,4 +173,5 @@ instance ToJSON Command where
   toJSON Methods             = Array (V.fromList [String "methods"])
   toJSON Chatnets            = Array (V.fromList [String "chatnets"])
   toJSON Version             = Array (V.fromList [String "parse_special", String "$J"])
+  toJSON (Print message)     = Array (V.fromList [String "Irssi::print", String message])
   toJSON (Msg message) = toJSON message

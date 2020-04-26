@@ -20,6 +20,7 @@ module Irssi.Worker
 
 import           Control.Concurrent            (forkIO)
 import           Control.Concurrent.Chan.Unagi
+import           Control.Monad.Except
 import           Data.Aeson                    (eitherDecodeStrict, encode)
 import           Data.Vector                   (Vector)
 import qualified Data.Vector                   as V
@@ -30,19 +31,19 @@ import           Irssi.Types
 
 -- | Start a background worker that will keep the connection to
 --   the UNIX-domain socket.
---   This function returns a ''writer' chan, in which Command command
+--   This function returns a @writer@ chan, in which Command command
 --   can be sent, and a ''reader' chan, from which the responses
 --   will be received.
 --
 --   === __Example:__
 --   > startWorker "/home/user/.irssi.sock"
-startWorker :: FilePath -> IO (Either Text IrssiState)
+startWorker :: (MonadIO m, MonadError APIError m) => FilePath -> m IrssiState
 startWorker path = do
-  (workerWriter, mainReader) <- newChan :: IO (InChan ByteString, OutChan ByteString)
-  (mainWriter, workerReader) <- newChan :: IO (InChan Command, OutChan Command)
-  s <- socket AF_UNIX Stream defaultProtocol
-  connect s (SockAddrUnix path)
-  forkIO $ process (workerWriter, workerReader) s
+  (workerWriter, mainReader) <- liftIO newChan
+  (mainWriter, workerReader) <- liftIO newChan
+  s <- liftIO $ socket AF_UNIX Stream defaultProtocol
+  liftIO $ connect s (SockAddrUnix path)
+  liftIO $ forkIO $ process (workerWriter, workerReader) s
   makeState (Stargate (mainWriter, mainReader)) path
 
 process :: (InChan ByteString, OutChan Command) -> Socket -> IO ()
@@ -60,39 +61,44 @@ process (inChan, outChan) s = do
 --
 -- > let msg = MkMessage Message{cmd="msg", network="freenode", channel="#bottest", message="I am alive!"}
 -- > sendMessage msg (writerChan, readerChan)
-sendMessage :: Command -> Stargate -> IO ByteString
+sendMessage :: (MonadIO m) => Command -> Stargate -> m ByteString
 sendMessage command stargate = do
   let (writerChan, readerChan) = getChans stargate
-  writeChan writerChan command
-  readChan readerChan
+  liftIO $ writeChan writerChan command
+  liftIO $ readChan readerChan
 
--- | Query the
-makeState :: Stargate -> FilePath -> IO (Either Text IrssiState)
+-- | Query the irssi instance to construct a statte
+makeState :: (MonadIO m, MonadError APIError m) => Stargate -> FilePath -> m IrssiState
 makeState stargate path = do
   methods <- getMethods stargate
   chatnets <- getChatnets stargate
   version <- getVersion stargate
-  let irssiState = IrssiState <$> methods
-                              <*> chatnets
-                              <*> version
-                              <*> pure path
-                              <*> pure stargate
-  pure irssiState
+  pure $ IrssiState methods
+                    chatnets
+                    version
+                    path
+                    stargate
 
-getChatnets :: Stargate -> IO (Either Text (Vector Chatnet))
+-- | Query the irssi instance to fetch the configured Chatnets
+getChatnets :: (MonadError APIError m, MonadIO m) => Stargate -> m (Vector Chatnet)
 getChatnets stargate = do
   response <- sendMessage Chatnets stargate
-  let result = eitherDecodeStrict response
-  pure $ bimap toText chatnetsList result
+  case eitherDecodeStrict response of
+    Left err    -> throwError $ JSONParsingError (toText err)
+    Right value -> pure $ chatnetsList value
 
-getMethods :: Stargate -> IO (Either Text (Vector Text))
+-- | Query the irssi instance to fetch the available methods
+getMethods :: (MonadError APIError m, MonadIO m) => Stargate -> m (Vector Text)
 getMethods stargate = do
   response <- sendMessage Methods stargate
-  let result = eitherDecodeStrict response
-  pure $ first toText result
+  case eitherDecodeStrict response of
+    Left err    -> throwError $ JSONParsingError (toText err)
+    Right value -> pure value
 
-getVersion :: Stargate -> IO (Either Text Text)
+-- | Query the irssi instance to fetch the irssi version
+getVersion :: (MonadError APIError m, MonadIO m) => Stargate -> m Text
 getVersion stargate = do
   response <- sendMessage Version stargate
-  let result = eitherDecodeStrict response
-  pure $ bimap toText (V.! 1) result
+  case eitherDecodeStrict response of
+    Left err    -> throwError $ JSONParsingError (toText err)
+    Right value -> pure $ value V.! 1
