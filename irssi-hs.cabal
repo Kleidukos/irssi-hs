@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f16439466ff085a7daeee0e07dc5bad26118168b290f9cd1c1a9cf20986738e4
+-- hash: 862d3dff084558677f4cee8330bf43815f49d2233cdbeb0206d3a13997a2a152
 
 name:           irssi-hs
 version:        0.0.0
@@ -37,13 +37,14 @@ library
       Irssi.Types
   other-modules:
       Irssi.Utils
+      Prelude
       Paths_irssi_hs
   hs-source-dirs:
       src
   default-extensions: ApplicativeDo BangPatterns ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies DuplicateRecordFields EmptyCase ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedStrings PatternSynonyms RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeApplications TypeFamilies TypeFamilyDependencies TypeOperators
   build-depends:
       aeson >=1.4.7 && <1.5
-    , base >=4.10 && <4.14
+    , base-noprelude >=4.10 && <4.14
     , bytestring >=0.10.8 && <0.11
     , containers >=0.6.0 && <0.7
     , directory >=1.3.3 && <1.4
@@ -53,9 +54,6 @@ library
     , unagi-chan >=0.4.1 && <0.5
     , unordered-containers >=0.2.10 && <0.3
     , vector >=0.12.1 && <0.13
-  mixins:
-      base hiding (Prelude)
-    , relude (Relude as Prelude)
   if impl(ghc >= 8.4.4)
     ghc-options: -Wall -Wcompat -Werror -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wpartial-fields -Wredundant-constraints -fhide-source-paths -Wno-unused-do-bind
   else
@@ -72,18 +70,15 @@ test-suite irssi-hs-tests
   default-extensions: ApplicativeDo BangPatterns ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies DuplicateRecordFields EmptyCase ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedStrings PatternSynonyms RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeApplications TypeFamilies TypeFamilyDependencies TypeOperators
   build-depends:
       aeson
-    , base >=4.10 && <4.14
+    , base-noprelude
     , bytestring
     , irssi-hs
-    , relude >=0.6.0 && <0.7
+    , relude
     , tasty
     , tasty-hspec
     , text
     , unordered-containers
     , vector
-  mixins:
-      base hiding (Prelude)
-    , relude (Relude as Prelude)
   if impl(ghc >= 8.4.4)
     ghc-options: -Wall -Wcompat -Werror -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wpartial-fields -Wredundant-constraints -fhide-source-paths -Wno-unused-do-bind
   else
