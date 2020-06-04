@@ -14,8 +14,8 @@ import Irssi
 main :: IO ()
 main = do
   let command = Msg Message{cmd="msg", network="freenode", channel="#bottest", message="I am alive!"}
-  stargate <- startWorker
-  sendMessage command stargate
+  Right irsiState <- runExceptT (startWorker "/home/foo/.irssi.sock")
+  sendMessage command (stargate irssiState)
 ```
 
 [simple haskell]: https://www.simplehaskell.org/badges/badge.svg

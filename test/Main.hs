@@ -3,27 +3,26 @@ module Main (main) where
 -- Tasty makes it easy to test your code. It is a test framework that can
 -- combine many different types of tests into one suite. See its website for
 -- help: <http://documentup.com/feuerbach/tasty>.
-import qualified Test.Tasty
 -- Hspec is one of the providers for Tasty. It provides a nice syntax for
 -- writing tests. Its website has more info: <https://hspec.github.io>.
 import           Data.Aeson
-import qualified Data.Vector      as V
-import           Test.Tasty.Hspec
+import qualified Data.Vector as V
+import           Test.Hspec
 
 import           Irssi.Types
 
 main :: IO ()
-main = do
-    test <- testSpec "irssi-hs" spec
-    Test.Tasty.defaultMain test
+main = hspec specs
 
-
-spec :: Spec
-spec = parallel $ do
+specs :: Spec
+specs = parallel $ do
     it "is trivially true" $ True `shouldBe` True
     it "JSON encoding for a Message is valid" $ do
       let command = Message "msg" "freenode" "#bottest" "Hey"
       encode command `shouldBe` "[\"command\",\"msg -freenode #bottest Hey\"]"
+    it "JSON encoding for a Print command is valid" $ do
+      let command = Print "Status: OK"
+      encode command `shouldBe` "[\"Irssi::print\",\"Status: OK\"]"
     it "Decoding chatnets message" $ do
       let result = eitherDecodeStrict chatnetJSONPayload
       result `shouldBe` Right chatnetResponse

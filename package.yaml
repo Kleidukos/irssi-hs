@@ -7,13 +7,13 @@ github: "kleidukos/irssi-hs"
 license: MIT
 author: "Hécate"
 maintainer: "Hécate"
-synopsis: A Haskell library to communicate with a running irssi
+synopsis: A Haskell library to communicate with irssi
 description: Please see README.md https://github.com/Kleidukos/irssi-hs/blob/master/README.md
 category: Network
 license-file: LICENSE.md
 tested-with: GHC==8.2.2, GHC==8.4.4, GHC==8.6.5, GHC==8.8.3
 verbatim:
-  cabal-version: 2.2
+  cabal-version: 2.4
 
 extra-source-files:
 - CHANGELOG.md
@@ -88,26 +88,26 @@ when:
         - -fhide-source-paths
         - -Wno-unused-do-bind
 
-
-
 library:
   exposed-modules:
     - Irssi
     - Irssi.Worker
     - Irssi.Types
+    - Prelude
 
   dependencies:
-  - aeson                >=1.4.7  && < 1.5
-  - bytestring           >=0.10.8 && < 0.11
-  - containers           >=0.6.0  && < 0.7
-  - text                 >=1.2.3  && <1.3
-  - vector               >=0.12.1 && < 0.13
-  - directory            >=1.3.3  && < 1.4
-  - network              >=3.1.1  && < 3.2
-  - base-noprelude       >=4.10   && < 4.14
-  - relude               >=0.6.0  && < 0.7
-  - unagi-chan           >=0.4.1  && < 0.5
-  - unordered-containers >=0.2.10 && < 0.3
+  - aeson      >= 1.4  && < 1.5
+  - bytestring >= 0.10 && < 0.11
+  - containers >= 0.6  && < 0.7
+  - text       >= 1.2  && < 1.3
+  - mtl        >= 2.2  && < 2.3
+  - vector     >= 0.12 && < 0.13
+  - base       >= 4.10 && < 4.15
+  - directory  >= 1.3  && < 1.4
+  - network    >= 3.1  && < 3.2
+  - relude     >= 0.6  && < 0.7
+  - unagi-chan >= 0.4  && < 0.5
+  - unordered-containers >= 0.2 && < 0.3
   source-dirs: src
 
 tests:
@@ -120,8 +120,9 @@ tests:
     - bytestring
     - irssi-hs
     - relude
-    - tasty
-    - tasty-hspec
+    - hspec >= 2.7 && < 2.8
+    - vector
+    - unordered-containers
     - text
     - unordered-containers
     - vector
