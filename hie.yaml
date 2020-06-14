@@ -1,0 +1,7 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "irssi-hs:lib"
+
+    - path: "./test"
+      component: "irssi-hs:test:irssi-hs-tests"

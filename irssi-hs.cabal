@@ -4,7 +4,7 @@ cabal-version: 2.4
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d0a423a1101275e185d9a53d009b969d8fd30ad45ab5f6dbdcb271dea8ed81c9
+-- hash: 2f90f92e583fba68ac3e0b748286c3ed8f5bfa44b5376700e9f1bd33c0e5a045
 
 name:           irssi-hs
 version:        0.0.0
@@ -44,13 +44,14 @@ library
   default-extensions: ApplicativeDo BangPatterns ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies DuplicateRecordFields EmptyCase ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedStrings PatternSynonyms RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeApplications TypeFamilies TypeFamilyDependencies TypeOperators
   build-depends:
       aeson >=1.4 && <1.5
-    , base >=4.10 && <4.15
+    , base-noprelude >=4.10 && <4.15
     , bytestring >=0.10 && <0.11
     , containers >=0.6 && <0.7
     , directory >=1.3 && <1.4
+    , hspec >=2.7 && <2.8
     , mtl >=2.2 && <2.3
     , network >=3.1 && <3.2
-    , relude >=0.6 && <0.7
+    , relude >=0.6 && <0.8
     , text >=1.2 && <1.3
     , unagi-chan >=0.4 && <0.5
     , unordered-containers >=0.2 && <0.3
@@ -73,7 +74,7 @@ test-suite irssi-hs-tests
       aeson
     , base-noprelude
     , bytestring
-    , hspec >=2.7 && <2.8
+    , hspec
     , irssi-hs
     , relude
     , text

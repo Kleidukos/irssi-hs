@@ -96,18 +96,19 @@ library:
     - Prelude
 
   dependencies:
-  - aeson      >= 1.4  && < 1.5
-  - bytestring >= 0.10 && < 0.11
-  - containers >= 0.6  && < 0.7
-  - text       >= 1.2  && < 1.3
-  - mtl        >= 2.2  && < 2.3
-  - vector     >= 0.12 && < 0.13
-  - base       >= 4.10 && < 4.15
-  - directory  >= 1.3  && < 1.4
-  - network    >= 3.1  && < 3.2
-  - relude     >= 0.6  && < 0.7
-  - unagi-chan >= 0.4  && < 0.5
+  - aeson          >= 1.4  && < 1.5
+  - base-noprelude >= 4.10 && < 4.15
+  - bytestring     >= 0.10 && < 0.11
+  - containers     >= 0.6  && < 0.7
+  - directory      >= 1.3  && < 1.4
+  - hspec          >= 2.7  && < 2.8
+  - mtl            >= 2.2  && < 2.3
+  - network        >= 3.1  && < 3.2
+  - relude         >= 0.6  && < 0.8
+  - text           >= 1.2  && < 1.3
+  - unagi-chan     >= 0.4  && < 0.5
   - unordered-containers >= 0.2 && < 0.3
+  - vector         >= 0.12 && < 0.13
   source-dirs: src
 
 tests:
@@ -120,7 +121,7 @@ tests:
     - bytestring
     - irssi-hs
     - relude
-    - hspec >= 2.7 && < 2.8
+    - hspec
     - vector
     - unordered-containers
     - text
