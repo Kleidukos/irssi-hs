@@ -29,7 +29,7 @@ import qualified Text.Show
 
 -- | This datatype encapsulates the potential JSON parsing error we may
 -- encounter when getting data from the socket server
-data APIError = JSONParsingError Text
+newtype APIError = JSONParsingError Text
   deriving (Show, Eq)
 
 -- | The newtype holding the communication channels to the worker

@@ -5,3 +5,5 @@
 .ghci
 
 stack.yaml.lock
+
+*.hie

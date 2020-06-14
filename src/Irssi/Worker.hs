@@ -69,15 +69,12 @@ sendMessage command stargate = do
 
 -- | Query the irssi instance to construct a statte
 makeState :: (MonadIO m, MonadError APIError m) => Stargate -> FilePath -> m IrssiState
-makeState stargate path = do
-  methods <- getMethods stargate
-  chatnets <- getChatnets stargate
-  version <- getVersion stargate
-  pure $ IrssiState methods
-                    chatnets
-                    version
-                    path
-                    stargate
+makeState stargate path =
+  IrssiState <$> getMethods stargate
+             <*> getChatnets stargate
+             <*> getVersion stargate
+             <*> pure path
+             <*> pure stargate
 
 -- | Query the irssi instance to fetch the configured Chatnets
 getChatnets :: (MonadError APIError m, MonadIO m) => Stargate -> m (Vector Chatnet)
